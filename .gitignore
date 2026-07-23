@@ -13,6 +13,7 @@ venv/
 # Django
 db.sqlite3
 media/
+staticfiles/
 
 # IDE
 .vscode/
@@ -32,6 +33,17 @@ htmlcov/
 # Pytest
 .pytest_cache/
 
-# Migrations (optional for apps under development)
+# MyPy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Migrations (Never ignore in production projects)
 # */migrations/*
 # !*/migrations/__init__.py

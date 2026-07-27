@@ -101,6 +101,7 @@ class TaskDetailAPIView(APIView):
 
         task = TaskService.update_task(
             task=task,
+            user=request.user,
             validated_data=serializer.validated_data,
         )
 

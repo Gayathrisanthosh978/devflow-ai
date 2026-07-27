@@ -98,6 +98,7 @@ class ProjectDetailAPIView(APIView):
 
         project = ProjectService.update_project(
             project=project,
+            user=request.user,
             validated_data=serializer.validated_data,
         )
 

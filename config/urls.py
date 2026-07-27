@@ -32,6 +32,7 @@ urlpatterns = [
     path("api/v1/organizations/",include("apps.organizations.urls")),
     path("api/v1/",include("apps.projects.urls")),
     path("api/v1/",include("apps.tasks.urls")),
+    path("api/v1/activities/", include("apps.activities.urls")),
 ]
 
 if settings.DEBUG:

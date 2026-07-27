@@ -6,6 +6,8 @@ from apps.organizations.models import OrganizationMember
 from .models import Task,TaskComment,TaskAttachment
 from apps.activities.models import ActivityAction
 from apps.activities.services import ActivityService
+from apps.notifications.models import NotificationType
+from apps.notifications.services import NotificationService
 
 
 
@@ -106,6 +108,22 @@ class TaskService:
             )
         if old_assignee != task.assigned_to:
 
+            if task.assigned_to:
+
+                NotificationService.create_notification(
+                    recipient=task.assigned_to.user,
+                    actor=user,
+                    task=task,
+                    notification_type=NotificationType.TASK_ASSIGNED,
+                    message=(
+                        f"{user.full_name} assigned you "
+                        f"to '{task.title}'"
+                    ),
+                    metadata={
+                        "task_id": str(task.id),
+                    },
+                )
+
             new_assignee_name = (
                 task.assigned_to.user.full_name
                 if task.assigned_to
@@ -166,7 +184,16 @@ class TaskCommentService:
             action=ActivityAction.COMMENT_CREATED,
             description=f"{user.full_name} commented on '{task.title}'",
         )
-
+        NotificationService.create_notification(
+            recipient=task.created_by,
+            actor=user,
+            task=task,
+            notification_type=NotificationType.TASK_COMMENTED,
+            message=(
+                f"{user.full_name} commented on "
+                f"'{task.title}'"
+            ),
+)
         return task_comment
 
     @staticmethod

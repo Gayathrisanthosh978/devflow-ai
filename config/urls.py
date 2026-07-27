@@ -30,6 +30,8 @@ urlpatterns = [
     # ReDoc
     path("api/redoc/",SpectacularRedocView.as_view(url_name="schema"),name="redoc"),
     path("api/v1/organizations/",include("apps.organizations.urls")),
+    path("api/v1/",include("apps.projects.urls")),
+    path("api/v1/",include("apps.tasks.urls")),
 ]
 
 if settings.DEBUG:

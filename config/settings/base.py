@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'apps.organizations',
     'apps.common',
     'apps.projects',
+    'apps.tasks',
 
     'rest_framework_simplejwt.token_blacklist',
     

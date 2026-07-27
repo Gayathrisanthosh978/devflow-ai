@@ -21,11 +21,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    role = models.CharField(
-        max_length=30,
-        choices=UserRole.choices,
-        default=UserRole.DEVELOPER,
-    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
@@ -40,5 +35,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = "users"
         ordering = ["-created_at"]
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     def __str__(self):
-        return self.email
+        return self.full_name or self.email

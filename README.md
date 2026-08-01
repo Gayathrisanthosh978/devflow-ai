@@ -1,5 +1,12 @@
 # 🚀 DevFlow AI Backend
 
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Django](https://img.shields.io/badge/Django-5.2-green)
+![DRF](https://img.shields.io/badge/Django_REST_Framework-red)
+![Tests](https://img.shields.io/badge/Tests-69_Passing-brightgreen)
+![CI](https://img.shields.io/github/actions/workflow/status/Gayathrisanthosh978/https://github.com/Gayathrisanthosh978/devflow-ai.git/tests.yml)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 A scalable project management backend built with **Django REST Framework** that enables organizations to manage projects, tasks, team members, notifications, and activity tracking.
 
 The application follows a **service-layer architecture**, implements **JWT authentication**, **role-based access control (RBAC)**, and includes **automated tests** to ensure reliability and maintainability.

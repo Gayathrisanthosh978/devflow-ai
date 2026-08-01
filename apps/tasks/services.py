@@ -1,7 +1,9 @@
 from django.db import transaction
+from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 
 from apps.organizations.models import OrganizationMember
+from apps.tasks.filters import TaskFilter
 
 from .models import Task,TaskComment,TaskAttachment
 from apps.activities.models import ActivityAction
@@ -45,9 +47,22 @@ class TaskService:
         return task
 
     @staticmethod
-    def list_tasks(*, project):
+    def list_tasks(*, project, filters=None):
 
-        return (
+        allowed_ordering = {
+            "created_at",
+            "-created_at",
+            "due_date",
+            "-due_date",
+            "priority",
+            "-priority",
+            "status",
+            "-status",
+            "title",
+            "-title",
+        }
+
+        queryset = (
             Task.objects.filter(project=project)
             .select_related(
                 "assigned_to",
@@ -55,6 +70,29 @@ class TaskService:
                 "project",
             )
         )
+
+        if filters:
+            queryset = TaskFilter(
+                filters,
+                queryset=queryset,
+            ).qs
+
+        search = filters.get("search")
+
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) |
+                Q(description__icontains=search)
+            )
+
+        ordering = filters.get("ordering")
+
+        if ordering in allowed_ordering:
+            queryset = queryset.order_by(ordering)
+        else:
+            queryset = queryset.order_by("-created_at")
+
+        return queryset
 
     @staticmethod
     @transaction.atomic

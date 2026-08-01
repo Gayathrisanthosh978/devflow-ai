@@ -18,10 +18,13 @@ from .serializers import (
 )
 from .services import ProjectService
 from .models import Project
+from apps.common.pagination import DefaultPagination
+
 
 class ProjectListCreateAPIView(APIView):
 
     permission_classes = [CanManageProjects]
+    pagination_class = DefaultPagination
 
     def get(self, request, organization_id):
 
@@ -32,6 +35,7 @@ class ProjectListCreateAPIView(APIView):
 
         projects = ProjectService.list_projects(
             organization=organization,
+            filters=request.query_params,
         )
 
         serializer = ProjectSerializer(
@@ -69,6 +73,7 @@ class ProjectListCreateAPIView(APIView):
 class ProjectDetailAPIView(APIView):
 
     permission_classes = [CanManageProjects]
+    pagination_class = DefaultPagination
 
     def get(self, request, project_id):
 

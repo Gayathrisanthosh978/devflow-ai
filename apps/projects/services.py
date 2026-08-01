@@ -1,8 +1,11 @@
 from django.db import transaction
+from django.db.models import Q
 
 from .models import Project
 from apps.activities.models import ActivityAction
 from apps.activities.services import ActivityService
+from .filters import ProjectFilter
+
 
 class ProjectService:
 
@@ -26,14 +29,44 @@ class ProjectService:
         return project
 
     @staticmethod
-    def list_projects(*, organization):
+    def list_projects(*, organization, filters=None):
 
-        return Project.objects.filter(
-            organization=organization
-        ).select_related(
-            "created_by",
-            "organization",
+        allowed_ordering = {
+            "name",
+            "-name",
+            "created_at",
+            "-created_at",
+        }
+
+        queryset = (
+            Project.objects.filter(
+                organization=organization,
+            )
+            .select_related(
+                "created_by",
+                "organization",
+            )
         )
+        if filters:
+            queryset = ProjectFilter(
+                filters,
+                queryset=queryset,
+            ).qs
+        search = filters.get("search")
+
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) |
+                Q(description__icontains=search)
+            )
+
+        ordering = filters.get("ordering")
+        if ordering in allowed_ordering:
+            queryset = queryset.order_by(ordering)
+        else:
+            queryset = queryset.order_by("-created_at")
+            
+        return queryset
 
     @staticmethod
     @transaction.atomic

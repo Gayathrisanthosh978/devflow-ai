@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+
+from apps.common.pagination import DefaultPagination
 from .models import Notification
 from .serializers import NotificationSerializer
 from .services import NotificationService
@@ -11,6 +13,7 @@ from .services import NotificationService
 class NotificationListAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
+    pagination_class = DefaultPagination
 
     def get(self, request):
 
@@ -29,6 +32,7 @@ class NotificationListAPIView(APIView):
 class NotificationDetailAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
+    pagination_class = DefaultPagination
 
     def patch(self, request, notification_id):
 
@@ -50,6 +54,7 @@ class NotificationDetailAPIView(APIView):
 class NotificationMarkAllReadAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
+    pagination_class = DefaultPagination
 
     def patch(self, request):
 

@@ -15,6 +15,16 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             "end_date",
         )
 
+    def validate_name(self, value):
+        value = value.strip()
+
+        if len(value) < 3:
+            raise serializers.ValidationError(
+                "Project name must be at least 3 characters."
+            )
+
+        return value
+
 
 class ProjectSerializer(serializers.ModelSerializer):
 

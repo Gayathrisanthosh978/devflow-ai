@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.common.pagination import DefaultPagination
 from apps.tasks.models import Task
 from apps.tasks.permissions import CanManageTasks
 
@@ -13,6 +14,7 @@ from .services import ActivityService
 class TaskActivityAPIView(APIView):
 
     permission_classes = [CanManageTasks]
+    pagination_class = DefaultPagination
 
     def get(self, request, task_id):
 

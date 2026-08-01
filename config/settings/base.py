@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'apps.tasks',
     'apps.activities',
     'apps.notifications',
+    'apps.dashboard',
 
     'rest_framework_simplejwt.token_blacklist',
     
@@ -156,6 +157,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_PAGINATION_CLASS": "apps.common.pagination.DefaultPagination",
+    "PAGE_SIZE": 20,
 }
 
 SIMPLE_JWT = {

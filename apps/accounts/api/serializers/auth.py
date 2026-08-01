@@ -36,6 +36,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
         return attrs
 
+    def validate_email(self, value):
+        return value.strip().lower()
+
     def create(self, validated_data):
         validated_data.pop("confirm_password")
 

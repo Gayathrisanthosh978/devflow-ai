@@ -3,7 +3,18 @@ from rest_framework import serializers
 from apps.organizations.models import OrganizationMember
 
 from .models import Task, TaskAttachment, TaskPriority, TaskStatus,TaskComment
+from django.utils import timezone
+import os
 
+ALLOWED_EXTENSIONS = {
+    ".pdf",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".zip",
+}
+
+MAX_FILE_SIZE = 10 * 1024 * 1024
 
 class TaskCreateSerializer(serializers.ModelSerializer):
 
@@ -13,6 +24,33 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         allow_null=True,
     )
 
+    def validate_due_date(self, value):
+
+        if value and value < timezone.now().date():
+            raise serializers.ValidationError(
+                "Due date cannot be in the past."
+            )
+
+        return value
+
+    def validate_estimated_hours(self, value):
+
+        if value is not None and value <= 0:
+            raise serializers.ValidationError(
+                "Estimated hours must be greater than zero."
+            )
+
+        return value
+
+    def validate_title(self, value):
+        value = value.strip()
+
+        if not value:
+            raise serializers.ValidationError(
+                "Title cannot be empty."
+            )
+
+        return value
     class Meta:
         model = Task
 
@@ -155,3 +193,20 @@ class TaskAttachmentSerializer(serializers.ModelSerializer):
             "name": obj.uploaded_by.full_name,
             "email": obj.uploaded_by.email,
         }
+
+
+    def validate_file(self, value):
+
+        extension = os.path.splitext(value.name)[1].lower()
+
+        if extension not in ALLOWED_EXTENSIONS:
+            raise serializers.ValidationError(
+                "Unsupported file type."
+            )
+
+        if value.size > MAX_FILE_SIZE:
+            raise serializers.ValidationError(
+                "Maximum file size is 10 MB."
+            )
+
+        return value

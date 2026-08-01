@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.common.pagination import DefaultPagination
 from apps.projects.models import Project
 
 from .models import Task,TaskComment,TaskAttachment
@@ -23,6 +24,7 @@ from .services import TaskService,TaskCommentService,TaskAttachmentService
 class TaskListCreateAPIView(APIView):
 
     permission_classes = [CanManageTasks]
+    pagination_class = DefaultPagination
 
     def get(self, request, organization_id, project_id):
 
@@ -34,6 +36,7 @@ class TaskListCreateAPIView(APIView):
 
         tasks = TaskService.list_tasks(
             project=project,
+            filters=request.query_params,
         )
 
         serializer = TaskSerializer(
@@ -72,6 +75,7 @@ class TaskListCreateAPIView(APIView):
 class TaskDetailAPIView(APIView):
 
     permission_classes = [CanManageTasks]
+    pagination_class = DefaultPagination
 
     def get(self, request, task_id):
 
@@ -127,6 +131,7 @@ class TaskDetailAPIView(APIView):
 class TaskCommentListCreateAPIView(APIView):
 
     permission_classes = [CanManageTasks]
+    pagination_class = DefaultPagination
 
     def get(self, request, task_id):
 
@@ -174,6 +179,7 @@ class TaskCommentListCreateAPIView(APIView):
 class TaskCommentDetailAPIView(APIView):
 
     permission_classes = [CanManageTaskComments]
+    pagination_class = DefaultPagination
 
     def patch(self, request, comment_id):
 
@@ -216,6 +222,7 @@ class TaskCommentDetailAPIView(APIView):
 class TaskAttachmentListCreateAPIView(APIView):
 
     permission_classes = [CanManageTasks]
+    pagination_class = DefaultPagination
 
     def get(self, request, task_id):
 
@@ -262,6 +269,7 @@ class TaskAttachmentListCreateAPIView(APIView):
 class TaskAttachmentDetailAPIView(APIView):
 
     permission_classes = [CanManageTasks]
+    pagination_class = DefaultPagination
 
     def delete(self, request, attachment_id):
 

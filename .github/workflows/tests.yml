@@ -2,31 +2,22 @@ name: Django Tests
 
 on:
   push:
-    branches:
-      - main
-      - master
-      - develop
-
+    branches: [main, master]
   pull_request:
-    branches:
-      - main
-      - master
-      - develop
+    branches: [main, master]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     services:
-
       postgres:
         image: postgres:16
 
         env:
-          POSTGRES_DB: devflow_ai
+          POSTGRES_DB: devflow_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Gaya@3
+          POSTGRES_PASSWORD: postgres
 
         ports:
           - 5432:5432
@@ -39,18 +30,17 @@ jobs:
 
     env:
       SECRET_KEY: github-actions-secret-key
-      DEBUG: False
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost,127.0.0.1
 
-      DATABASE_NAME: devflow_ai
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: Gaya@3
-      DATABASE_HOST: localhost
-      DATABASE_PORT: 5432
+      DB_NAME: devflow_test
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: localhost
+      DB_PORT: 5432
 
     steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -63,9 +53,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run migrations
-        run: |
-          python manage.py migrate
+        run: python manage.py migrate
 
       - name: Run tests
-        run: |
-          python manage.py test
+        run: python manage.py test

@@ -1,7 +1,6 @@
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth import authenticate
+from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
@@ -25,9 +24,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "confirm_password",
         )
         read_only_fields = ("id",)
-        extra_kwargs = {
-            "password": {"write_only": True}
-        }
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, attrs):
         if attrs["password"] != attrs["confirm_password"]:
@@ -45,7 +42,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -60,14 +56,10 @@ class LoginSerializer(serializers.Serializer):
         )
 
         if not user:
-            raise serializers.ValidationError(
-                "Invalid email or password."
-            )
+            raise serializers.ValidationError("Invalid email or password.")
 
         if not user.is_active:
-            raise serializers.ValidationError(
-                "Your account is inactive."
-            )
+            raise serializers.ValidationError("Your account is inactive.")
 
         refresh = RefreshToken.for_user(user)
 

@@ -1,5 +1,5 @@
-from rest_framework.permissions import BasePermission
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import BasePermission
 
 from apps.common.permissions import get_membership, has_role
 from apps.organizations.models import OrganizationRole
@@ -37,11 +37,7 @@ class CanManageTasks(BasePermission):
 
             if task_id:
 
-                task = (
-                    Task.objects.select_related("project")
-                    .filter(id=task_id)
-                    .first()
-                )
+                task = Task.objects.select_related("project").filter(id=task_id).first()
 
                 if not task:
                     return False

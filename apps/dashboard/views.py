@@ -1,11 +1,13 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from apps.activities.serializers import ActivityLogSerializer
 from apps.dashboard.serializers import DashboardTaskSerializer
-from .services import DashboardService
-from django.shortcuts import get_object_or_404
 from apps.projects.models import Project
+
+from .services import DashboardService
 
 
 class DashboardAPIView(APIView):
@@ -19,6 +21,7 @@ class DashboardAPIView(APIView):
         )
 
         return Response(data)
+
 
 class DashboardRecentActivitiesAPIView(APIView):
 
@@ -54,6 +57,7 @@ class DashboardMyTasksAPIView(APIView):
         )
 
         return Response(serializer.data)
+
 
 class ProjectDashboardAPIView(APIView):
 

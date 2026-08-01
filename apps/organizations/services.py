@@ -1,5 +1,8 @@
 from django.db import transaction
+from rest_framework.exceptions import ValidationError
+
 from apps.accounts.models import User
+
 from .models import Organization, OrganizationMember, OrganizationRole
 
 
@@ -30,7 +33,9 @@ class OrganizationService:
             organization=organization,
             user=invited_user,
         ).exists():
-            raise ValueError("User is already a member of this organization.")
+            raise ValidationError(
+                {"email": "User is already a member of this organization."}
+            )
 
         member = OrganizationMember.objects.create(
             organization=organization,
@@ -43,8 +48,7 @@ class OrganizationService:
     @staticmethod
     def list_members(*, organization):
         return (
-            OrganizationMember.objects
-            .filter(
+            OrganizationMember.objects.filter(
                 organization=organization,
                 is_active=True,
             )

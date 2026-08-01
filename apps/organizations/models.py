@@ -1,9 +1,11 @@
 # Create your models here.
 
 import uuid
-from django.db import models
+
 from django.conf import settings
+from django.db import models
 from django.utils.text import slugify
+
 
 class OrganizationRole(models.TextChoices):
     OWNER = "OWNER", "Owner"
@@ -12,7 +14,8 @@ class OrganizationRole(models.TextChoices):
     DEVELOPER = "DEVELOPER", "Developer"
     CLIENT = "CLIENT", "Client"
     TEAMLEAD = "TEAMLEAD", "TeamLead"
-    QA = "QA","Qa"
+    QA = "QA", "Qa"
+
 
 class Organization(models.Model):
     id = models.UUIDField(

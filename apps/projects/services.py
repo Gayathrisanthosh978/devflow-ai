@@ -1,10 +1,11 @@
 from django.db import transaction
 from django.db.models import Q
 
-from .models import Project
 from apps.activities.models import ActivityAction
 from apps.activities.services import ActivityService
+
 from .filters import ProjectFilter
+from .models import Project
 
 
 class ProjectService:
@@ -38,14 +39,11 @@ class ProjectService:
             "-created_at",
         }
 
-        queryset = (
-            Project.objects.filter(
-                organization=organization,
-            )
-            .select_related(
-                "created_by",
-                "organization",
-            )
+        queryset = Project.objects.filter(
+            organization=organization,
+        ).select_related(
+            "created_by",
+            "organization",
         )
         if filters:
             queryset = ProjectFilter(
@@ -56,8 +54,7 @@ class ProjectService:
 
         if search:
             queryset = queryset.filter(
-                Q(name__icontains=search) |
-                Q(description__icontains=search)
+                Q(name__icontains=search) | Q(description__icontains=search)
             )
 
         ordering = filters.get("ordering")
@@ -65,12 +62,12 @@ class ProjectService:
             queryset = queryset.order_by(ordering)
         else:
             queryset = queryset.order_by("-created_at")
-            
+
         return queryset
 
     @staticmethod
     @transaction.atomic
-    def update_project(*, project,user, validated_data):
+    def update_project(*, project, user, validated_data):
 
         for field, value in validated_data.items():
             setattr(project, field, value)

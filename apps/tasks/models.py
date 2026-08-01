@@ -1,10 +1,12 @@
-import uuid
 import os
+import uuid
+
 from django.conf import settings
 from django.db import models
 
-from apps.projects.models import Project
 from apps.organizations.models import OrganizationMember
+from apps.projects.models import Project
+
 
 class TaskStatus(models.TextChoices):
     TODO = "TODO", "To Do"
@@ -13,11 +15,13 @@ class TaskStatus(models.TextChoices):
     DONE = "DONE", "Done"
     BLOCKED = "BLOCKED", "Blocked"
 
+
 class TaskPriority(models.TextChoices):
     LOW = "LOW", "Low"
     MEDIUM = "MEDIUM", "Medium"
     HIGH = "HIGH", "High"
     CRITICAL = "CRITICAL", "Critical"
+
 
 class Task(models.Model):
 
@@ -130,14 +134,12 @@ class TaskComment(models.Model):
     def __str__(self):
         return f"{self.user.email} - {self.task.title}"
 
+
 def task_attachment_upload_path(instance, filename):
 
     extension = os.path.splitext(filename)[1]
 
-    return (
-        f"tasks/{instance.task.id}/"
-        f"{uuid.uuid4()}{extension}"
-    )
+    return f"tasks/{instance.task.id}/" f"{uuid.uuid4()}{extension}"
 
 
 class TaskAttachment(models.Model):

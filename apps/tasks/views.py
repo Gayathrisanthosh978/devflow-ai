@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,19 +6,15 @@ from rest_framework.views import APIView
 from apps.common.pagination import DefaultPagination
 from apps.projects.models import Project
 
-from .models import Task,TaskComment,TaskAttachment
+from .models import Task, TaskAttachment, TaskComment
 from .permissions import CanManageTaskComments, CanManageTasks
-from .serializers import (
-    TaskCreateSerializer,
-    TaskSerializer,
-    TaskUpdateSerializer,
-    TaskCommentCreateSerializer,
-    TaskCommentSerializer,
-    TaskCommentUpdateSerializer,
-    TaskAttachmentUploadSerializer,
-    TaskAttachmentSerializer,
-)
-from .services import TaskService,TaskCommentService,TaskAttachmentService
+from .serializers import (TaskAttachmentSerializer,
+                          TaskAttachmentUploadSerializer,
+                          TaskCommentCreateSerializer, TaskCommentSerializer,
+                          TaskCommentUpdateSerializer, TaskCreateSerializer,
+                          TaskSerializer, TaskUpdateSerializer)
+from .services import TaskAttachmentService, TaskCommentService, TaskService
+
 
 class TaskListCreateAPIView(APIView):
 
@@ -84,9 +79,7 @@ class TaskDetailAPIView(APIView):
             id=task_id,
         )
 
-        return Response(
-            TaskSerializer(task).data
-        )
+        return Response(TaskSerializer(task).data)
 
     def patch(self, request, task_id):
 
@@ -109,9 +102,7 @@ class TaskDetailAPIView(APIView):
             validated_data=serializer.validated_data,
         )
 
-        return Response(
-            TaskSerializer(task).data
-        )
+        return Response(TaskSerializer(task).data)
 
     def delete(self, request, task_id):
 
@@ -124,9 +115,8 @@ class TaskDetailAPIView(APIView):
             task=task,
         )
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class TaskCommentListCreateAPIView(APIView):
 
@@ -199,9 +189,7 @@ class TaskCommentDetailAPIView(APIView):
             comment=serializer.validated_data["comment"],
         )
 
-        return Response(
-            TaskCommentSerializer(comment).data
-        )
+        return Response(TaskCommentSerializer(comment).data)
 
     def delete(self, request, comment_id):
 
@@ -214,9 +202,7 @@ class TaskCommentDetailAPIView(APIView):
             task_comment=comment,
         )
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TaskAttachmentListCreateAPIView(APIView):
@@ -266,6 +252,7 @@ class TaskAttachmentListCreateAPIView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class TaskAttachmentDetailAPIView(APIView):
 
     permission_classes = [CanManageTasks]
@@ -282,7 +269,4 @@ class TaskAttachmentDetailAPIView(APIView):
             attachment=attachment,
         )
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
-
+        return Response(status=status.HTTP_204_NO_CONTENT)

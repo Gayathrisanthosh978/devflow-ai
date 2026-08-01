@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import DashboardAPIView, DashboardMyTasksAPIView, DashboardRecentActivitiesAPIView, ProjectDashboardAPIView
+from .views import (DashboardAPIView, DashboardMyTasksAPIView,
+                    DashboardRecentActivitiesAPIView, ProjectDashboardAPIView)
 
 urlpatterns = [
     path(

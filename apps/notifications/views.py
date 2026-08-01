@@ -1,10 +1,10 @@
 from django.shortcuts import get_object_or_404
-
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 
 from apps.common.pagination import DefaultPagination
+
 from .models import Notification
 from .serializers import NotificationSerializer
 from .services import NotificationService
@@ -46,9 +46,7 @@ class NotificationDetailAPIView(APIView):
             notification=notification,
         )
 
-        return Response(
-            NotificationSerializer(notification).data
-        )
+        return Response(NotificationSerializer(notification).data)
 
 
 class NotificationMarkAllReadAPIView(APIView):
@@ -62,8 +60,4 @@ class NotificationMarkAllReadAPIView(APIView):
             user=request.user,
         )
 
-        return Response(
-            {
-                "detail": "All notifications marked as read."
-            }
-        )
+        return Response({"detail": "All notifications marked as read."})

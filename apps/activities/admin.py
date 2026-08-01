@@ -25,6 +25,4 @@ class ActivityLogAdmin(admin.ModelAdmin):
         "project__name",
     )
 
-    readonly_fields = (
-        "created_at",
-    )
+    readonly_fields = ("created_at",)

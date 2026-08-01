@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
-from apps.organizations.models import OrganizationRole
 from apps.common.permissions import has_role
+from apps.organizations.models import OrganizationRole
 
 from .models import Project
 

@@ -40,7 +40,6 @@ class NotificationService:
             .order_by("-created_at")
         )
 
-
     @staticmethod
     @transaction.atomic
     def mark_as_read(*, notification):
@@ -49,7 +48,6 @@ class NotificationService:
         notification.save(update_fields=["is_read"])
 
         return notification
-
 
     @staticmethod
     @transaction.atomic

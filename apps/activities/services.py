@@ -32,11 +32,11 @@ class ActivityService:
     def list_task_activities(*, task):
 
         return (
-            ActivityLog.objects.filter(
-                task=task
-            )
+            ActivityLog.objects.filter(task=task)
             .select_related(
                 "user",
+                "project",
+                "task",
             )
-            .order_by("-created_at")
+            .order_by("-created_at", "-id")
         )

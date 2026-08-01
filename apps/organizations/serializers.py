@@ -1,9 +1,8 @@
 from rest_framework import serializers
 
-from .models import Organization, OrganizationMember
-
 from apps.accounts.models import User
-from .models import OrganizationRole
+
+from .models import Organization, OrganizationMember, OrganizationRole
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -36,8 +35,8 @@ class InviteMemberSerializer(serializers.Serializer):
             (OrganizationRole.PROJECT_MANAGER, "Project Manager"),
             (OrganizationRole.DEVELOPER, "Developer"),
             (OrganizationRole.CLIENT, "Client"),
-            (OrganizationRole.TEAMLEAD,"TeamLead"),
-            (OrganizationRole.QA,"Qa")
+            (OrganizationRole.TEAMLEAD, "TeamLead"),
+            (OrganizationRole.QA, "Qa"),
         ]
     )
 
@@ -48,6 +47,7 @@ class InviteMemberSerializer(serializers.Serializer):
             raise serializers.ValidationError("User not found.")
 
         return user
+
 
 class OrganizationMemberSerializer(serializers.ModelSerializer):
     member_id = serializers.UUIDField(source="id", read_only=True)
@@ -72,9 +72,9 @@ class OrganizationMemberSerializer(serializers.ModelSerializer):
 class UpdateMemberRoleSerializer(serializers.Serializer):
 
     role = serializers.ChoiceField(
-    choices=[
-        choice
-        for choice in OrganizationRole.choices
-        if choice[0] != OrganizationRole.OWNER
-    ]
+        choices=[
+            choice
+            for choice in OrganizationRole.choices
+            if choice[0] != OrganizationRole.OWNER
+        ]
     )

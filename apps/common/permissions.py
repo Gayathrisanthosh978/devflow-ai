@@ -1,19 +1,27 @@
 from apps.organizations.models import OrganizationMember
 
 
-def get_membership(*, organization_id, user):
+def get_membership(*, user, organization_id):
+
+    if not user.is_authenticated:
+        return None
+
     return OrganizationMember.objects.filter(
-        organization_id=organization_id,
         user=user,
+        organization_id=organization_id,
     ).first()
 
 
-def has_role(*, organization_id, user, allowed_roles):
+def has_role(user, organization_id, allowed_roles):
+    if not user.is_authenticated:
+        return False
+
     membership = get_membership(
-        organization_id=organization_id,
         user=user,
+        organization_id=organization_id,
     )
 
-    return bool(
-        membership and membership.role in allowed_roles
-    )
+    if membership is None:
+        return False
+
+    return membership.role in allowed_roles

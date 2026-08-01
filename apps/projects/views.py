@@ -1,24 +1,17 @@
-from django.shortcuts import render
-
 # Create your views here.
-from django.shortcuts import get_object_or_404
-
+from django.shortcuts import get_object_or_404, render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.common.pagination import DefaultPagination
 from apps.organizations.models import Organization
 
-from .permissions import CanManageProjects
-from .serializers import (
-    ProjectCreateSerializer,
-    ProjectSerializer,
-    ProjectSerializer,
-    ProjectUpdateSerializer
-)
-from .services import ProjectService
 from .models import Project
-from apps.common.pagination import DefaultPagination
+from .permissions import CanManageProjects
+from .serializers import (ProjectCreateSerializer, ProjectSerializer,
+                          ProjectUpdateSerializer)
+from .services import ProjectService
 
 
 class ProjectListCreateAPIView(APIView):
@@ -107,9 +100,7 @@ class ProjectDetailAPIView(APIView):
             validated_data=serializer.validated_data,
         )
 
-        return Response(
-            ProjectSerializer(project).data
-        )
+        return Response(ProjectSerializer(project).data)
 
     def delete(self, request, project_id):
 
@@ -122,6 +113,4 @@ class ProjectDetailAPIView(APIView):
             project=project,
         )
 
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,11 +1,10 @@
+from django.utils import timezone
 
+from apps.activities.models import ActivityLog
+from apps.notifications.models import Notification
 from apps.organizations.models import OrganizationMember
 from apps.projects.models import Project
-from apps.tasks.models import Task,TaskStatus
-from apps.notifications.models import Notification
-from apps.activities.models import ActivityLog
-from django.utils import timezone
-from apps.tasks.models import Task, TaskStatus, TaskPriority
+from apps.tasks.models import Task, TaskPriority, TaskStatus
 
 
 class DashboardService:
@@ -33,12 +32,8 @@ class DashboardService:
             "projects": projects.count(),
             "tasks": tasks.count(),
             "todo_tasks": tasks.filter(status=TaskStatus.TODO).count(),
-            "in_progress_tasks": tasks.filter(
-                status=TaskStatus.IN_PROGRESS
-            ).count(),
-            "completed_tasks": tasks.filter(
-                status=TaskStatus.DONE
-            ).count(),
+            "in_progress_tasks": tasks.filter(status=TaskStatus.IN_PROGRESS).count(),
+            "completed_tasks": tasks.filter(status=TaskStatus.DONE).count(),
             "unread_notifications": Notification.objects.filter(
                 recipient=user,
                 is_read=False,
@@ -98,11 +93,7 @@ class DashboardService:
             status=TaskStatus.DONE,
         ).count()
 
-        progress = (
-            round((completed_tasks / total_tasks) * 100, 2)
-            if total_tasks
-            else 0
-        )
+        progress = round((completed_tasks / total_tasks) * 100, 2) if total_tasks else 0
 
         return {
             "project": {
@@ -115,9 +106,11 @@ class DashboardService:
                 "progress": progress,
                 "overdue_tasks": tasks.filter(
                     due_date__lt=timezone.now().date(),
-                ).exclude(
+                )
+                .exclude(
                     status=TaskStatus.DONE,
-                ).count(),
+                )
+                .count(),
             },
             "status_distribution": {
                 "todo": tasks.filter(

@@ -1,10 +1,7 @@
 from django.urls import path
 
-from .views import (
-    NotificationListAPIView,
-    NotificationDetailAPIView,
-    NotificationMarkAllReadAPIView,
-)
+from .views import (NotificationDetailAPIView, NotificationListAPIView,
+                    NotificationMarkAllReadAPIView)
 
 urlpatterns = [
     path(

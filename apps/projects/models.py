@@ -1,9 +1,8 @@
-from django.db import models
-
 # Create your models here.
 import uuid
 
 from django.conf import settings
+from django.db import models
 
 from apps.organizations.models import Organization
 

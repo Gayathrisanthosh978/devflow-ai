@@ -1,22 +1,20 @@
-from rest_framework import generics
+from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
+                                   extend_schema)
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
-from rest_framework import status
 from rest_framework.response import Response
 
-from apps.accounts.api.serializers.auth import RegisterSerializer,LoginSerializer
-from drf_spectacular.utils import (OpenApiExample,OpenApiResponse,extend_schema)
+from apps.accounts.api.serializers.auth import (LoginSerializer,
+                                                RegisterSerializer)
+
 
 @extend_schema(
     summary="Register a new user",
     description="Creates a new user account using email and password.",
     request=RegisterSerializer,
     responses={
-        201: OpenApiResponse(
-            description="User registered successfully."
-        ),
-        400: OpenApiResponse(
-            description="Validation error."
-        ),
+        201: OpenApiResponse(description="User registered successfully."),
+        400: OpenApiResponse(description="Validation error."),
     },
     examples=[
         OpenApiExample(

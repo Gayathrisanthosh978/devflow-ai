@@ -2,15 +2,14 @@ from django.db import transaction
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 
-from apps.organizations.models import OrganizationMember
-from apps.tasks.filters import TaskFilter
-
-from .models import Task,TaskComment,TaskAttachment
 from apps.activities.models import ActivityAction
 from apps.activities.services import ActivityService
 from apps.notifications.models import NotificationType
 from apps.notifications.services import NotificationService
+from apps.organizations.models import OrganizationMember
+from apps.tasks.filters import TaskFilter
 
+from .models import Task, TaskAttachment, TaskComment
 
 
 class TaskService:
@@ -62,13 +61,10 @@ class TaskService:
             "-title",
         }
 
-        queryset = (
-            Task.objects.filter(project=project)
-            .select_related(
-                "assigned_to",
-                "created_by",
-                "project",
-            )
+        queryset = Task.objects.filter(project=project).select_related(
+            "assigned_to",
+            "created_by",
+            "project",
         )
 
         if filters:
@@ -81,8 +77,7 @@ class TaskService:
 
         if search:
             queryset = queryset.filter(
-                Q(title__icontains=search) |
-                Q(description__icontains=search)
+                Q(title__icontains=search) | Q(description__icontains=search)
             )
 
         ordering = filters.get("ordering")
@@ -108,7 +103,7 @@ class TaskService:
                         "assigned_to": "Selected member does not belong to this organization."
                     }
                 )
-            
+
         old_status = task.status
         old_assignee = task.assigned_to
 
@@ -153,19 +148,14 @@ class TaskService:
                     actor=user,
                     task=task,
                     notification_type=NotificationType.TASK_ASSIGNED,
-                    message=(
-                        f"{user.full_name} assigned you "
-                        f"to '{task.title}'"
-                    ),
+                    message=(f"{user.full_name} assigned you " f"to '{task.title}'"),
                     metadata={
                         "task_id": str(task.id),
                     },
                 )
 
             new_assignee_name = (
-                task.assigned_to.user.full_name
-                if task.assigned_to
-                else "Unassigned"
+                task.assigned_to.user.full_name if task.assigned_to else "Unassigned"
             )
 
             ActivityService.log_activity(
@@ -180,18 +170,12 @@ class TaskService:
                     f"{new_assignee_name}"
                 ),
                 metadata={
-                    "old_assignee": (
-                        str(old_assignee.id)
-                        if old_assignee else None
-                    ),
+                    "old_assignee": (str(old_assignee.id) if old_assignee else None),
                     "new_assignee": (
-                        str(task.assigned_to.id)
-                        if task.assigned_to else None
+                        str(task.assigned_to.id) if task.assigned_to else None
                     ),
                 },
             )
-
-        
 
         return task
 
@@ -227,11 +211,8 @@ class TaskCommentService:
             actor=user,
             task=task,
             notification_type=NotificationType.TASK_COMMENTED,
-            message=(
-                f"{user.full_name} commented on "
-                f"'{task.title}'"
-            ),
-)
+            message=(f"{user.full_name} commented on " f"'{task.title}'"),
+        )
         return task_comment
 
     @staticmethod
@@ -278,8 +259,7 @@ class TaskAttachmentService:
             user=uploaded_by,
             action=ActivityAction.ATTACHMENT_UPLOADED,
             description=(
-                f"{uploaded_by.full_name} uploaded "
-                f"'{attachment.original_name}'"
+                f"{uploaded_by.full_name} uploaded " f"'{attachment.original_name}'"
             ),
             metadata={
                 "filename": attachment.original_name,
@@ -312,10 +292,7 @@ class TaskAttachmentService:
             task=task,
             user=user,
             action=ActivityAction.ATTACHMENT_DELETED,
-            description=(
-                f"{user.full_name} deleted "
-                f"'{filename}'"
-            ),
+            description=(f"{user.full_name} deleted " f"'{filename}'"),
             metadata={
                 "filename": filename,
             },
